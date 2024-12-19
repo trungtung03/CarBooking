@@ -1,5 +1,6 @@
 package com.example.carbooking.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -50,5 +51,11 @@ public class AccountActivity extends AppCompatActivity {
 
         NavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(AccountActivity.this, HomeActivity.class));
     }
 }

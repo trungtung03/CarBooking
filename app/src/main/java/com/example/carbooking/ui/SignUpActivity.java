@@ -3,7 +3,6 @@ package com.example.carbooking.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +17,8 @@ import com.example.carbooking.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Objects;
 
@@ -40,7 +41,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private TextView ssignin;
 
 
-    private Button payment;
     private CreditCard creditCard = null;
 
     private FirebaseAuth mAuth;
@@ -56,11 +56,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editTextStreetAddress = findViewById(R.id.address_street);
         editTextCity = findViewById(R.id.address_city);
         editTextZipCode = findViewById(R.id.address_zip_code);
-        payment = findViewById(R.id.payment_selector);
         editTextPhoneNumber = findViewById(R.id.phone_number);
         ssignin = findViewById(R.id.link_to_login);
         signup.setOnClickListener(this);
-        payment.setOnClickListener(this);
         ssignin.setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
 //        Objects.requireNonNull(getSupportActionBar()).setTitle("Register");
@@ -128,7 +126,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     if (task.isSuccessful()) {
                         String uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
-                        User newUser = new User(uid, phoneNumber, name, email, phoneNumber, street_address, "", city, zipCode, editTextPassword.getText().toString());
+                        User newUser = new User(uid, phoneNumber, name, email,
+                                phoneNumber, street_address, "",
+                                city, zipCode,
+                                hashPasswordWithBcrypt(editTextPassword.getText().toString())
+                        );
                         newUser.setCreditCard(creditCard);
 
                         saveUserToFirestore(db, newUser);
@@ -136,6 +138,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         handleRegistrationError(task.getException());
                     }
                 });
+    }
+
+    private String hashPasswordWithBcrypt(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
     private void saveUserToFirestore(FirebaseFirestore db, User user) {
@@ -167,18 +173,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
         if (v.getId() == R.id.register_user) {
             registerUser();
-        } else if (v.getId() == R.id.payment_selector) {
-            Intent intentToPayment = new Intent(this, PrePayment.class);
-            startActivityForResult(intentToPayment, 1);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            creditCard = (CreditCard) data.getExtras().getSerializable("cardDetails");
-            payment.setText("Added");
         }
     }
 

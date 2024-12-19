@@ -67,6 +67,9 @@ public class CarCategoryActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     CarListObject carCategory = snapshot.getValue(CarListObject.class);
                     if (carCategory != null) {
+                        Log.d("TAG__", "onDataChange: " + snapshot.getKey());
+                        carCategory.setCategory(Objects.requireNonNull(CustomApplication.type).toUpperCase());
+                        carCategory.setSubCategory(snapshot.getKey());
                         carData.add(carCategory);
                     }
                 }

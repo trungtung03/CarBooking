@@ -1,20 +1,22 @@
 package com.example.carbooking.ui.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.carbooking.R;
+import com.example.carbooking.ui.EditActivity;
 import com.example.carbooking.ui.User;
 import com.example.carbooking.utils.CustomApplication;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,6 +25,7 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment {
 
     private TextView name, email, phone, address;
+    private ImageView edit;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public ProfileFragment() {
@@ -37,6 +40,13 @@ public class ProfileFragment extends Fragment {
         name = view.findViewById(R.id.user_name);
         email = view.findViewById(R.id.user_email);
         phone = view.findViewById(R.id.user_phone);
+        edit = view.findViewById(R.id.imgEdit);
+
+        edit.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), EditActivity.class);
+            intent.putExtra("uid", CustomApplication.uid);
+            startActivity(intent);
+        });
 
         getUserFromFirestore(db);
 

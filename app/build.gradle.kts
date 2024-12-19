@@ -64,4 +64,5 @@ dependencies {
     implementation(libs.places)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation("org.mindrot:jbcrypt:0.4")
 }

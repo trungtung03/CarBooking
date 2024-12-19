@@ -14,11 +14,11 @@ import com.bumptech.glide.Glide;
 import com.example.carbooking.R;
 import com.example.carbooking.models.ReservationObject;
 import com.example.carbooking.utils.CustomApplication;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.Random;
 
 public class CheckoutActivity extends AppCompatActivity {
@@ -71,6 +71,8 @@ public class CheckoutActivity extends AppCompatActivity {
         rentalCost.setText("$" + getIntent().getStringExtra("total"));
         Glide.with(CheckoutActivity.this).load(getIntent().getStringExtra("image")).into(carImage);
 
+        String carCategory = getIntent().getStringExtra("carKey");
+
         pushReservation(new ReservationObject(
                 carName.getText().toString(),
                 getIntent().getStringExtra("email") + " \n" + getIntent().getStringExtra("nameUser"),
@@ -80,12 +82,13 @@ public class CheckoutActivity extends AppCompatActivity {
                 getIntent().getStringExtra("image")
         ));
 
+        updateStatus(carCategory, "Booked");
+
         Button backToMenuButton = findViewById(R.id.back_to_menu);
         backToMenuButton.setOnClickListener(v -> {
             Intent menuIntent = new Intent(CheckoutActivity.this, HomeActivity.class);
             startActivity(menuIntent);
         });
-
     }
 
     @SuppressLint("DefaultLocale")
@@ -112,5 +115,16 @@ public class CheckoutActivity extends AppCompatActivity {
         } else {
             System.out.println("Failed to generate a new Reservation ID");
         }
+    }
+
+    public void updateStatus(String carCategory, String status) {
+        DatabaseReference carRef = mDatabase.child("Carcateogry").child(Objects.requireNonNull(getIntent().getStringExtra("carType"))).child(carCategory);
+        carRef.child("status").setValue(status)
+                .addOnSuccessListener(aVoid -> {
+                    System.out.println("Car status updated to " + status);
+                })
+                .addOnFailureListener(e -> {
+                    System.out.println("Failed to update car status: " + e.getMessage());
+                });
     }
 }

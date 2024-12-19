@@ -13,6 +13,28 @@
         android:src="@drawable/bmw"
         android:contentDescription="@string/app_name"/>
 
+    <ImageView
+        android:id="@+id/car_category_"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="@dimen/_150sdp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/book"
+        android:contentDescription="@string/app_name"/>
+
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đã đặt"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:textSize="@dimen/_16sdp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <!-- Các LinearLayout và TextViews khác vẫn giữ nguyên -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,6 +112,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

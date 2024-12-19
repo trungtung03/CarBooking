@@ -34,6 +34,12 @@
         android:padding="@dimen/_16sdp"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/baseline_edit_24"
+            android:id="@+id/imgEdit"/>
+
         <TextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"

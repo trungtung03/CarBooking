@@ -1,9 +1,11 @@
 package com.example.carbooking.adapter;
 
 
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,12 +47,25 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
         holder.carName.setText(carListObject.getCarName());
         holder.price.setText("$" + (int) carListObject.getPrice());
         Glide.with(context).load(carListObject.getCarImage()).into(holder.imageView);
-
+        if ("Booked".equalsIgnoreCase(carListObject.getStatus())) {
+            holder.view.setEnabled(false);
+            holder.imageView.setVisibility(View.GONE);
+            holder.carImage.setVisibility(View.VISIBLE);
+            holder.statusText.setVisibility(View.VISIBLE);
+        } else {
+            holder.statusText.setVisibility(View.GONE);
+            holder.carImage.setVisibility(View.GONE);
+            holder.imageView.setVisibility(View.VISIBLE);
+        }
         holder.view.setOnClickListener(v -> {
+            holder.view.setEnabled(true);
             Intent carIntent = new Intent(context, ProductActivity.class);
             carIntent.putExtra("price", (int) carListObject.getPrice());
             carIntent.putExtra("name", carListObject.getCarName());
             carIntent.putExtra("image", carListObject.getCarImage());
+            carIntent.putExtra("carKey", carListObject.getSubCategory());
+            carIntent.putExtra("carType", carListObject.getCategory());
+            Log.d("TAG__", "onBindViewHolder: " + carListObject.getSubCategory() + "  " + carListObject.getCategory());
             context.startActivity(carIntent);
         });
     }

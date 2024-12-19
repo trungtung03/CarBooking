@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -18,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.example.carbooking.R;
 import com.example.carbooking.customviews.DateBlock;
 import com.example.carbooking.utils.CustomApplication;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -42,6 +42,8 @@ public class BookingActivity extends AppCompatActivity {
     private TextView dailyPrice, extraHour, totalAmount;
 
     private TextView name, address, email, phone;
+    private CountDownTimer timer;
+    private final long sessionDuration = 5 * 60 * 1000L;
 
     private RadioButton payPal, creditCard, payNow;
 
@@ -126,16 +128,51 @@ public class BookingActivity extends AppCompatActivity {
 
         Button payNowButton = findViewById(R.id.pay_now);
         payNowButton.setOnClickListener(v -> {
+            if (timer != null) {
+                timer.cancel();
+            }
             Intent checkoutIntent = new Intent(BookingActivity.this, CheckoutActivity.class);
             checkoutIntent.putExtra("total", totalAmount.getText().toString());
             checkoutIntent.putExtra("image", getIntent().getStringExtra("image"));
             checkoutIntent.putExtra("name", getIntent().getStringExtra("name"));
             checkoutIntent.putExtra("email", email.getText().toString());
             checkoutIntent.putExtra("nameUser", name.getText().toString());
+            checkoutIntent.putExtra("carKey", getIntent().getStringExtra("carKey"));
+            checkoutIntent.putExtra("carType", getIntent().getStringExtra("carType"));
             startActivity(checkoutIntent);
         });
 
         getUserFromFirestore(db);
+
+        startBookingSession();
+    }
+
+    private void startBookingSession() {
+        timer = new CountDownTimer(sessionDuration, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long minutes = (millisUntilFinished / 1000) / 60;
+                long seconds = (millisUntilFinished / 1000) % 60;
+                TextView timerTextView = findViewById(R.id.timerTextView);
+                timerTextView.setText("Thời gian còn lại: " + minutes + ":" + String.format("%02d", seconds));
+            }
+
+            @Override
+            public void onFinish() {
+                Toast.makeText(BookingActivity.this, "Hết thời gian phiên, quay về trang chủ!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BookingActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     private void getUserFromFirestore(FirebaseFirestore db) {

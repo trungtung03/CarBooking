@@ -58,6 +58,7 @@ public class UserActivity extends AppCompatActivity {
             userRef.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
                     User user = documentSnapshot.toObject(User.class);
+                    assert user != null;
                     etName.setText(user.getName());
                     etStreetAddress.setText(user.getStreetAddress());
                     etAptNumber.setText(user.getAptNumber());
@@ -87,6 +88,7 @@ public class UserActivity extends AppCompatActivity {
             String userId = getIntent().getStringExtra("uid");
             User user = new User(userId, "", name, email, phoneNumber, streetAddress, aptNumber, city, zipCode, password);
 
+            assert userId != null;
             db.collection("users").document(userId).set(user)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(UserActivity.this, "User saved successfully", Toast.LENGTH_SHORT).show();
@@ -99,6 +101,7 @@ public class UserActivity extends AppCompatActivity {
     private void deleteUser() {
         if (mAuth.getCurrentUser() != null) {
             String userId = getIntent().getStringExtra("uid");
+            assert userId != null;
             db.collection("users").document(userId).delete()
                     .addOnSuccessListener(aVoid -> {
                         mAuth.getCurrentUser().delete()

@@ -58,6 +58,7 @@
     <string name="info">Policy &amp; Terms</string>
     <string name="title_activity_product">ProductActivity</string>
     <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_activity_edit_profile">EditActivity</string>
     <string name="title_activity_edit">UserActivity</string>
     <string name="reset_password">Enter your email to reset your password</string>
     <string name="password_reset_message">Password recovery instruction has been sent to you</string>

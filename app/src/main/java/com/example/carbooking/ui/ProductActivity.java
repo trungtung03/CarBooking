@@ -66,6 +66,8 @@ public class ProductActivity extends AppCompatActivity {
             bookingIntent.putExtra("total", Integer.parseInt(dailyPrice.getText().toString()) * Integer.parseInt(hourlyPrice.getText().toString()));
             bookingIntent.putExtra("image", getIntent().getStringExtra("image"));
             bookingIntent.putExtra("name", getIntent().getStringExtra("name"));
+            bookingIntent.putExtra("carKey", getIntent().getStringExtra("carKey"));
+            bookingIntent.putExtra("carType", getIntent().getStringExtra("carType"));
             startActivity(bookingIntent);
         });
 

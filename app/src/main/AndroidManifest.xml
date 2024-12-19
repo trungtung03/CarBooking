@@ -67,7 +67,6 @@
             android:label="@string/title_activity_checkout"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.example.carbooking.ui.FullOrderActivity" />
-        <activity android:name="com.example.carbooking.ui.WebActivity" />
         <activity
             android:name="com.example.carbooking.ui.ProductActivity"
             android:label="@string/title_activity_product"
@@ -84,6 +83,10 @@
         <activity
             android:name="com.example.carbooking.ui.CarManagerActivity"
             android:label="@string/title_activity_admin"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.example.carbooking.ui.EditActivity"
+            android:label="@string/title_activity_edit_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.example.carbooking.ui.ForgottenActivity" />
 

@@ -12,13 +12,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.carbooking.R;
 import com.example.carbooking.utils.CustomApplication;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Objects;
 
@@ -80,6 +86,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
         makeFieldsNonEditable();
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(loginEmail.getText().toString(), loginPassword.getText().toString())
+                .addOnCompleteListener(task -> {});
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("users")
@@ -90,7 +98,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         DocumentSnapshot userSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                         String storedPassword = userSnapshot.getString("password");
 
-                        if (storedPassword != null && storedPassword.equals(ppassword)) {
+                        if (verifyPassword(ppassword, storedPassword)) {
                             Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_SHORT).show();
                             CustomApplication.uid = userSnapshot.getString("id");
                             openHomeScreen();
@@ -140,5 +148,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private boolean verifyPassword(String plainPassword, String hashedPassword) {
+        return BCrypt.checkpw(plainPassword, hashedPassword);
     }
 }
