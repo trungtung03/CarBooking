@@ -18,7 +18,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder{
     public TextView price;
     public ImageView imageView;
     public View view;
-    ImageView carImage;
+    TextView carImage;
     TextView statusText;
 
     public CategoryViewHolder(View itemView) {

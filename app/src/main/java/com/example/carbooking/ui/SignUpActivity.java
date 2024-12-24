@@ -119,6 +119,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{6,}$";
+        if (!password.matches(passwordPattern)) {
+            editTextPassword.setError(getString(R.string.input_error_password_strength));
+            editTextPassword.requestFocus();
+            return;
+        }
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         mAuth.createUserWithEmailAndPassword(email, password)
